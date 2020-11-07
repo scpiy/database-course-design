@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="Description" content="Enter your description here"/>
+<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css}">
+<link rel="stylesheet" th:href="@{assets/css/style.css}">
+<title>Title</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" th:href="@{#}">scpi's Mall</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{#}" style="color: red;">products <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item" >
+        <a class="nav-link" th:href="@{/mall/payment}" >cart</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link " th:href="@{/user/information}">home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/user/order}">orders</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<!--<ul class="list-group" th:each="cloth : ${clothes}">-->
+<!--  <li class="list-group-item">-->
+<!--      <div class="card">-->
+<!--        <div class="card-body">-->
+<!--          <a th:href="@{/mall/{id}(id = ${cloth.getId()})}" th:text="${cloth.getName()}"></a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--  </li>-->
+<!--</ul>-->
+
+<div class="row">
+  <div class="col-sm-3"  th:each="cloth : ${clothes}">
+    <div class="card">
+      <img th:src="@{img/cloth.jpg}" src="" class="card-img-top" alt="???"/>
+      <div class="card-body">
+        <h5 class="card-title" th:text="${cloth.getName()}">cloth</h5>
+        <p class="card-text" th:tet="'already sell ' + ${cloth.getTotalSales()}">sales</p>
+        <p class="card-text">price</p>
+        <a class="btn btn-primary" th:href="@{/mall/{id}(id = ${cloth.getId()})}" href="">Get It!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
+</html>
