@@ -2,7 +2,6 @@ package com.scpi.clothes.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -19,11 +18,6 @@ public class Clothes {
     private String name;
     private Long inventory;
     private Long totalSales;
-
-    private Long springSales;
-    private Long summerSales;
-    private Long autumnSales;
-    private Long winterSales;
 
     @ManyToMany(targetEntity = Supplier.class, mappedBy = "clothes", fetch = FetchType.EAGER)
     private List<Supplier> supplier;

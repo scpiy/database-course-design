@@ -43,9 +43,11 @@ public class MallController {
     public String showClothes(Model model, Principal Principal) {
         User user = userRepository.findByUsername(Principal.getName());
         model.addAttribute("user", user);
+        List<String> audiences = clothesRepository.findAllAudience();
+        model.addAttribute("audiences", audiences);
         List<Clothes> clothes = clothesRepository.findAll();
         model.addAttribute("clothes", clothes);
-        return "/mall/show";
+        return "/mall/index";
     }
 
     @GetMapping("/{id}")
