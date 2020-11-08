@@ -27,6 +27,8 @@ public class ClothesOrder {
     private Date createAt;
     private boolean payment;
 
+    // price
+
     @PrePersist
     void createAt() {
         this.createAt = new Date();

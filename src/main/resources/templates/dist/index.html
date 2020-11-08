@@ -6,8 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - SB Admin</title>
-        <link th:href="@{css/styles.css}" rel="stylesheet" />
+        <title>Dashboard - Admin</title>
+        <link th:href="@{/css/styles.css}" rel="stylesheet" />
         <link th:href="@{https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css}" rel="stylesheet" crossorigin="anonymous" />
         <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js}" crossorigin="anonymous"></script>
     </head>
@@ -48,9 +48,9 @@
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed" th:href="@{#}" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <a class="nav-link collapsed" th:href="@{/admin/addCloth}" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Layouts
+                                Add a Cloth
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
@@ -59,9 +59,9 @@
                                     <a class="nav-link" th:href="layout-sidenav-light.html">Light Sidenav</a>
                                 </nav>
                             </div>
-                            <a class="nav-link collapsed" th:href="@{#}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <a class="nav-link collapsed" th:href="@{/admin/changeCloth}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
+                                Change Cloth
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
@@ -92,11 +92,11 @@
                                 </nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" th:href="@{/charts}">
+                            <a class="nav-link" th:href="@{/admin/charts}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
                             </a>
-                            <a class="nav-link" th:href="@{/tables}">
+                            <a class="nav-link" th:href="@{/admin/tables}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tables
                             </a>
@@ -120,7 +120,7 @@
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">All Orders</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" th:href="@{#}">View Details</a>
+                                        <a class="small text-white stretched-link" th:href="@{/admin/AllOrders}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -129,7 +129,7 @@
                                 <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Unpaid Orders</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" th:href="@{#}">View Details</a>
+                                        <a class="small text-white stretched-link" th:href="@{/admin/UnpaidOrders}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-body">All Clothes</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" th:href="@{#}">View Details</a>
+                                        <a class="small text-white stretched-link" th:href="@{/admin/AllClothes}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">Popular Clothes</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" th:href="@{#}">View Details</a>
+                                        <a class="small text-white stretched-link" th:href="@{/admin/PopularClothes}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -190,6 +190,7 @@
                                                 <th>Supplier</th>
                                                 <th>Type</th>
                                                 <th>AudienceType</th>
+                                                <th>Change</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
@@ -201,6 +202,7 @@
                                                 <th>Supplier</th>
                                                 <th>Type</th>
                                                 <th>AudienceType</th>
+                                                <th>Change</th>
                                             </tr>
                                         </tfoot>
                                         <tbody th:each="cloth : ${clothes}">
@@ -212,6 +214,11 @@
                                             <th>Supplier</th>
                                             <th th:text="${cloth.getType()}">Type</th>
                                             <th th:text="${cloth.getAudienceType()}">AudienceType</th>
+                                            <th>
+                                                <a class="btn btn-primary" th:href="@{/admin/changeCloth(clothId=${cloth.getId()})}" role="button">
+                                                    Change
+                                                </a>
+                                            </th>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -234,14 +241,17 @@
                 </footer>
             </div>
         </div>
+        <script th:inline="javascript">
+            let sales = [[${sales}]];
+        </script>
         <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script th:src="@{/js/src/js/scripts.js}"></script>
         <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js}" crossorigin="anonymous"></script>
-        <script th:src="@{/assets/demo/chart-area-demo.js}"></script>
-        <script th:src="@{/assets/demo/chart-bar-demo.js}"></script>
+        <script th:inline="javascript" th:src="@{/js/src/assets/demo/chart-area-demo.js}"></script>
+        <script th:src="@{/js/src/assets/demo/chart-bar-demo.js}"></script>
         <script th:src="@{https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js}" crossorigin="anonymous"></script>
         <script th:src="@{https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js}" crossorigin="anonymous"></script>
-        <script th:src="@{assets/demo/datatables-demo.js}"></script>
+        <script th:src="@{/js/src/assets/demo/datatables-demo.js}"></script>
     </body>
 </html>

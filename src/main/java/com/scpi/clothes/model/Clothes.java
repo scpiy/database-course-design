@@ -25,5 +25,10 @@ public class Clothes {
     private String type;
     private String audienceType;
 
-    // price
+    private Long springSales;
+    private Long summerSales;
+    private Long autumnSales;
+    private Long winterSales;
+
+    // TODO add a price field
 }
