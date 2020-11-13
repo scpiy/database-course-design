@@ -4,6 +4,7 @@ import com.scpi.clothes.model.Clothes;
 import com.scpi.clothes.model.User;
 import com.scpi.clothes.repository.ClothesOrderRepository;
 import com.scpi.clothes.repository.ClothesRepository;
+import com.scpi.clothes.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,12 +22,15 @@ import java.io.IOException;
 @Slf4j
 public class FakerController {
     ClothesRepository clothesRepository;
+    UserRepository userRepository;
     ClothesOrderRepository clothesOrderRepository;
 
-    public FakerController(ClothesRepository clothesRepository, ClothesOrderRepository clothesOrderRepository) {
+    public FakerController(ClothesRepository clothesRepository, ClothesOrderRepository clothesOrderRepository, UserRepository userRepository) {
         this.clothesRepository = clothesRepository;
         this.clothesOrderRepository = clothesOrderRepository;
+        this.userRepository = userRepository;
     }
+
 
 
 //    @GetMapping

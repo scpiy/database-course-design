@@ -14,12 +14,16 @@ import com.sun.xml.bind.v2.TODO;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +46,20 @@ public class AdminSystemController {
     }
 
     @GetMapping
-    public String index(Model model, Principal principal) {
-        List<Integer> sales = new ArrayList<>();
+    public String index(Model model, @AuthenticationPrincipal User user) {
+        List<Long> sales = new ArrayList<>(4);
+        for (int i = 0; i <4; ++i)
+            sales.add(0L);
         List<Clothes> clothes = clothesRepository.findAll();
-        User user = userRepository.findByUsername(principal.getName());
-        for (int i = 0; i < 13; ++i) {
-            sales.add(10000 + 2000 * i);
+        Long totalSales = 0L;
+        for (var cloth : clothes) {
+            sales.set(0, sales.get(0) + cloth.getSpringSales());
+            sales.set(1, sales.get(1) + cloth.getSummerSales());
+            sales.set(2, sales.get(2) + cloth.getAutumnSales());
+            sales.set(3, sales.get(3) + cloth.getWinterSales());
+            totalSales += cloth.getTotalSales();
         }
+        model.addAttribute("totalSales", totalSales);
         model.addAttribute("sales", sales);
         model.addAttribute("clothes", clothes);
         model.addAttribute("user", user);
@@ -57,26 +68,36 @@ public class AdminSystemController {
     }
 
     @GetMapping("/{pageType}")
-    public String card(Model model, Principal principal, @PathVariable("pageType") String pageType) {
+    public String card(Model model, @PathVariable("pageType") String pageType, @AuthenticationPrincipal User user) {
+        List<Long> sales = new ArrayList<>(4);
+        for (int i = 0; i <4; ++i)
+            sales.add(0L);
+        List<Clothes> clothes;
+        Long totalSales = 0L;
         if (pageType == null)
             pageType = "AllClothes";
-        List<Integer> sales = new ArrayList<>();
-        List<Clothes> clothes = new ArrayList<>();
-        List<ClothesOrder> orders = new ArrayList<>();
-        User user = userRepository.findByUsername(principal.getName());
-        for (int i = 0; i < 13; ++i) {
-            sales.add(10000 + 2000 * i);
-        }
-        model.addAttribute("sales", sales);
+        List<ClothesOrder> orders;
         model.addAttribute("user", user);
         if ("AllClothes".equals(pageType) || "PopularClothes".equals(pageType)) {
             if ("AllClothes".equals(pageType))
                 clothes = clothesRepository.findAll();
-            else
-                clothes = clothesRepository.findAll().stream()
-                        .sorted((a, b) -> (int) (a.getTotalSales() - b.getTotalSales()))
-                        .limit(10).collect(Collectors.toList());
+            else {
+                PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("totalSales").descending());
+                clothes = clothesRepository.findAll(pageRequest).getContent();
+            }
+            for (var cloth : clothes) {
+                sales.set(0, sales.get(0) + cloth.getSpringSales());
+                totalSales += cloth.getSpringSales();
+                sales.set(1, sales.get(1) + cloth.getSummerSales());
+                totalSales += cloth.getSummerSales();
+                sales.set(2, sales.get(2) + cloth.getAutumnSales());
+                totalSales += cloth.getAutumnSales();
+                sales.set(3, sales.get(3) + cloth.getWinterSales());
+                totalSales += cloth.getWinterSales();
+            }
             model.addAttribute("clothes", clothes);
+            model.addAttribute("sales", sales);
+            model.addAttribute("totalSales", totalSales);
             return "dist/index";
         } else {
             if ("AllOrders".equals(pageType) || "UnpaidOrder".equals(pageType))
@@ -86,6 +107,8 @@ public class AdminSystemController {
                         .filter(order -> !order.isPayment())
                         .collect(Collectors.toList());
             model.addAttribute("orders", orders);
+            model.addAttribute("sales", sales);
+            model.addAttribute("totalSales", totalSales);
             return "dist/order";
         }
     }
@@ -101,8 +124,7 @@ public class AdminSystemController {
     }
 
     @GetMapping("/addCloth")
-    public String addCloth(Model model, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName());
+    public String addCloth(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("user", user);
         return "dist/addCloth";
     }
@@ -114,10 +136,9 @@ public class AdminSystemController {
     }
 
     @GetMapping("/changeCloth")
-    public String changeCloth(Model model, Principal principal,
+    public String changeCloth(Model model, @AuthenticationPrincipal User user,
                               @RequestParam(value = "clothId", required = false) Long clothId,
                               @RequestParam(value = "clothName", required = false) String clothName) {
-        User user = userRepository.findByUsername(principal.getName());
         Clothes clothes = new Clothes();
         model.addAttribute("user", user);
         boolean getClothById = false;
@@ -148,8 +169,8 @@ public class AdminSystemController {
     }
 
     @GetMapping("/delete")
-    public String deleteCloth(@RequestParam(value = "clothId") Long clothId, Model model, Principal principal) {
-        model.addAttribute("user", userRepository.findByUsername(principal.getName()));
+    public String deleteCloth(@RequestParam(value = "clothId") Long clothId, Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
         model.addAttribute("clothes", clothesRepository.findById(clothId).get());
         return "dist/deleteCloth";
     }

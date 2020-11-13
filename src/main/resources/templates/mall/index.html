@@ -30,7 +30,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" th:href="@{#}">Home
+            <a class="nav-link" th:href="@{/mall}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -38,10 +38,10 @@
             <a class="nav-link" th:href="@{#}">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{#}">Account</a>
+            <a class="nav-link" th:href="@{/user/account}">Account</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{#}">Cart</a>
+            <a class="nav-link" th:href="@{/mall/payment}">Cart</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" th:href="@{#}">Contact us</a>
@@ -60,7 +60,7 @@
 
         <h1 class="my-4">Treu's shop</h1>
         <div class="list-group" th:each="audience : ${audiences}">
-          <a th:href="@{#}" class="list-group-item" th:text="${audience}">Category 1</a>
+          <a th:href="@{/mall(audienceType=${audience})}" class="list-group-item" th:text="${audience}">Category 1</a>
         </div>
 
       </div>
@@ -99,10 +99,10 @@
 
           <div class="col-lg-4 col-md-6 mb-4" th:each="cloth : ${clothes}">
             <div class="card h-100">
-              <a th:href="@{#}"><img class="card-img-top" src="" th:src="@{img/cloth.jpg}" alt=""></a>
+              <a th:href="@{/mall/{id}(id = ${cloth.getId()})}"><img class="card-img-top" src="" th:src="@{img/cloth.jpg}" alt=""></a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a th:href="@{#}" th:text="${cloth.getName()}">Item One</a>
+                  <a th:href="@{/mall/{id}(id = ${cloth.getId()})}" th:text="${cloth.getName()}">Item One</a>
                 </h4>
                 <h5>$24.99</h5>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>

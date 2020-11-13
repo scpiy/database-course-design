@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Proxy;
+import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,16 +19,17 @@ public class ClothesOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-//    @ManyToOne
-    private Long userId;
+    @ManyToOne
+    private User ownUser;
 
+    // TODO there should contain the number of clothes
     @ManyToMany(targetEntity = Clothes.class, fetch = FetchType.EAGER)
     private List<Clothes> clothes;
 
     private Date createAt;
     private boolean payment;
 
-    // price
+    private Long amount;
 
     @PrePersist
     void createAt() {

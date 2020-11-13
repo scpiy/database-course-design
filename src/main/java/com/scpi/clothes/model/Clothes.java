@@ -30,5 +30,6 @@ public class Clothes {
     private Long autumnSales;
     private Long winterSales;
 
-    // TODO add a price field
+    private Long price;
+
 }
