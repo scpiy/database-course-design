@@ -9,7 +9,7 @@ public class AddClothForm {
     private String type;
     private String audienceType;
     private Long inventory;
-    // TODO add a price field
+    private Long price;
 
     public Clothes toCloth() {
         Clothes clothes = new Clothes();
@@ -17,6 +17,7 @@ public class AddClothForm {
         clothes.setType(type);
         clothes.setAudienceType(audienceType);
         clothes.setInventory(inventory);
+        clothes.setPrice(price);
         clothes.setTotalSales(0L);
         clothes.setSpringSales(0L);
         clothes.setSummerSales(0L);

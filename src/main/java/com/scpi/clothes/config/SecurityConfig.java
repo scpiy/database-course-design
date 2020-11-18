@@ -34,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(encoder());
     }
 
+    // TODO use a new authorization system.
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

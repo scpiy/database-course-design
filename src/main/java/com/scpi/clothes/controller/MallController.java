@@ -85,6 +85,9 @@ public class MallController {
 
     @PostMapping("payment")
     public String processPayment(@ModelAttribute(name = "cart") ClothesOrder cart, @AuthenticationPrincipal User user, SessionStatus sessionStatus) {
+        /*
+            TODO I should add a check box make user select some clothes to buy, just like hxf suggest.
+         */
         Long amount = 0L;
         for (var cloth : cart.getClothes()) {
             amount += cloth.getPrice();

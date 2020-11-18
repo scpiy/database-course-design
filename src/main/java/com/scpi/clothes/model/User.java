@@ -27,6 +27,8 @@ public class User implements UserDetails {
     private String address;
     private String phoneNumber;
 
+    // TODO add a wallet to each user. then I can use transaction...
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
