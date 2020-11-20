@@ -19,7 +19,7 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Register</h4>
-							<form method="POST" class="my-login-validation" th:action="@{/register}">
+							<form method="POST" class="my-login-validation" th:action="@{#}">
 								<div class="form-group">
 									<label for="username">Username</label>
 									<input id="username" type="text" class="form-control" name="username" placeholder="Username" required autofocus>
@@ -68,7 +68,8 @@
 									</button>
 								</div>
 								<div class="mt-4 text-center">
-									Already have an account? <a th:href="@{login.html}">Login</a>
+									Already have an account? <a th:href="@{/login}">Login</a> <br/>
+									Are you is a admin? Create a Admin account.<a th:href="@{/register/admin}">Register</a>
 								</div>
 							</form>
 						</div>

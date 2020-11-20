@@ -1,8 +1,7 @@
 package com.scpi.clothes.controller;
 
-import com.scpi.clothes.model.Clothes;
-import com.scpi.clothes.model.ClothesOrder;
-import com.scpi.clothes.model.User;
+import com.scpi.clothes.model.*;
+import com.scpi.clothes.repository.AssociationOfClothAndOrderRepository;
 import com.scpi.clothes.repository.ClothesOrderRepository;
 import com.scpi.clothes.repository.ClothesRepository;
 import com.scpi.clothes.repository.UserRepository;
@@ -12,33 +11,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/mall")
-@SessionAttributes("cart")
+@SessionAttributes("orderList")
 public class MallController {
     UserRepository userRepository;
     ClothesRepository clothesRepository;
     ClothesOrderRepository clothesOrderRepository;
+    AssociationOfClothAndOrderRepository associationOfClothAndOrderRepository;
 
-    public MallController(ClothesRepository clothesRepository, UserRepository userRepository, ClothesOrderRepository clothesOrderRepository) {
+    public MallController(ClothesRepository clothesRepository, UserRepository userRepository, ClothesOrderRepository clothesOrderRepository, AssociationOfClothAndOrderRepository associationOfClothAndOrderRepository) {
         this.clothesRepository = clothesRepository;
         this.userRepository = userRepository;
         this.clothesOrderRepository = clothesOrderRepository;
+        this.associationOfClothAndOrderRepository = associationOfClothAndOrderRepository;
     }
 
-    @ModelAttribute(name = "cart")
-    public ClothesOrder cart(@AuthenticationPrincipal User user) {
-        ClothesOrder cart = new ClothesOrder();
-        cart.setOwnUser(user);
-        cart.setPayment(false);
-        cart.setClothes(new ArrayList<>());
-        cart.setAmount(0L);
-        return cart;
+    @ModelAttribute(name = "orderList")
+    public List<Orders> cart() {
+        return new ArrayList<>();
     }
 
     @GetMapping
@@ -64,36 +58,44 @@ public class MallController {
     }
 
     @PostMapping("/{id}")
-    public String addToCart(@PathVariable("id") Long id, @ModelAttribute(name = "cart") ClothesOrder cart, Integer number) {
+    public String addToCart(@PathVariable("id") Long id, @ModelAttribute(name = "orderList") List<Orders> ordersList, Integer number) {
         Clothes cloth = clothesRepository.getOne(id);
-        for (int i = 0; i < number; ++i)
-            cart.getClothes().add(cloth);
+        ordersList.add(new Orders(cloth, number));
         return "redirect:/mall";
     }
 
     @GetMapping("payment")
-    public String payment(@AuthenticationPrincipal User user, @ModelAttribute(name = "cart") ClothesOrder cart, Model model) {
+    public String payment(@AuthenticationPrincipal User user, @ModelAttribute(name = "orderList") List<Orders> ordersList, Model model) {
         model.addAttribute("user", user);
-        // TODO create a new model to store the item and the number of the item in the cart
-        model.addAttribute("cart", cart);
-        Long totalCost = 0L;
-        for (var cloth : cart.getClothes())
-            totalCost += cloth.getPrice();
+        model.addAttribute("orderList", ordersList);
+        long totalCost = 0L;
+        for (var order : ordersList) {
+            totalCost += order.getClothes().getPrice() * order.getCountOfCloth();
+        }
         model.addAttribute("totalCost", totalCost);
         return "/mall/payment";
     }
 
     @PostMapping("payment")
-    public String processPayment(@ModelAttribute(name = "cart") ClothesOrder cart, @AuthenticationPrincipal User user, SessionStatus sessionStatus) {
+    public String processPayment(@ModelAttribute(name = "orderList") List<Orders> ordersList, @AuthenticationPrincipal User user, SessionStatus sessionStatus) {
         /*
             TODO I should add a check box make user select some clothes to buy, just like hxf suggest.
          */
-        Long amount = 0L;
-        for (var cloth : cart.getClothes()) {
-            amount += cloth.getPrice();
+        long amount = 0L;
+        ClothesOrder clothesOrder = new ClothesOrder();
+        clothesOrder.setPayment(false);
+        clothesOrder.setOwnUser(user);
+        for (var order : ordersList)
+            amount += order.getClothes().getPrice() * order.getCountOfCloth();
+        clothesOrder.setAmount(amount);
+        clothesOrderRepository.save(clothesOrder);
+        for (var order : ordersList) {
+            AssociationOfClothAndOrder associationOfClothAndOrder = new AssociationOfClothAndOrder();
+            associationOfClothAndOrder.setCloth(order.getClothes());
+            associationOfClothAndOrder.setOrder(clothesOrder);
+            associationOfClothAndOrder.setCountOfCloth(order.getCountOfCloth());
+            associationOfClothAndOrderRepository.save(associationOfClothAndOrder);
         }
-        cart.setAmount(amount);
-        clothesOrderRepository.save(cart);
         sessionStatus.setComplete();
         return "redirect:/mall";
     }
@@ -105,4 +107,5 @@ public class MallController {
         clothesOrderRepository.save(order);
         return "redirect:/user/account";
     }
+
 }

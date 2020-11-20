@@ -2,9 +2,7 @@ package com.scpi.clothes.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Proxy;
-import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,8 +21,12 @@ public class ClothesOrder {
     private User ownUser;
 
     // TODO there should contain the number of clothes
-    @ManyToMany(targetEntity = Clothes.class, fetch = FetchType.EAGER)
-    private List<Clothes> clothes;
+//    @ManyToMany(targetEntity = Clothes.class, fetch = FetchType.EAGER)
+//    @JoinTable(name = "clothes_order_clothes",
+//                joinColumns = @JoinColumn(referencedColumnName = "id", name = "clothes_order_id"),
+//                inverseJoinColumns = @JoinColumn(referencedColumnName = "id", name = "clothes_id"))
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
+    private List<AssociationOfClothAndOrder> clothes;
 
     private Date createAt;
     private boolean payment;

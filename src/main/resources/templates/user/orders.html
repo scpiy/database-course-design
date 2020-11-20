@@ -57,16 +57,16 @@
         <table class="table">
         <tbody>
         <tr>
-            <th colspan="4" th:text="${'Order ID: ' + order.getId()}"></th>
+            <th colspan="5" th:text="${'Order ID: ' + order.getId()}"></th>
         </tr>
         <tr th:each="item : ${order.getClothes()}">
             <td>
                 <img src="" th:src="@{/img/cloth.jpg}" alt="" style="max-width: 15rem">
             </td>
-            <td class="align-middle" th:text="${item.getName()}"></td>
+            <td class="align-middle" th:text="${item.getCloth().getName()}"></td>
             <td class="align-middle">Some description of cloth</td>
-            <!--            <td class="align-middle" th:text="${item.getPrice()}">Pieces</td>-->
-            <td class="align-middle" th:text="${'Price: ' + item.getPrice()}">Price</td>
+            <td class="align-middle" th:text="${'Price: ' + item.getCloth().getPrice()}">Price</td>
+            <td class="align-middle" th:text="${'Count: ' + item.getCountOfCloth()}">Count</td>
         </tr>
         <tr>
             <td></td>

@@ -77,4 +77,13 @@ public class FakerController {
         }
         return "login";
     }
+
+    @GetMapping("oneCloth")
+    public String generateTestData() {
+        Clothes clothes = new Clothes();
+        clothes.setName("???");
+        clothes.setPrice(123L);
+        clothesRepository.save(clothes);
+        return "login";
+    }
 }

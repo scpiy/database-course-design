@@ -3,28 +3,19 @@ package com.scpi.clothes.controller;
 import com.scpi.clothes.form.AddClothForm;
 import com.scpi.clothes.form.ChangeClothForm;
 import com.scpi.clothes.form.SearchClothForm;
+import com.scpi.clothes.model.Admin;
 import com.scpi.clothes.model.Clothes;
 import com.scpi.clothes.model.ClothesOrder;
 import com.scpi.clothes.model.User;
-import com.scpi.clothes.repository.ClothesOrderRepository;
-import com.scpi.clothes.repository.ClothesRepository;
-import com.scpi.clothes.repository.SupplierRepository;
-import com.scpi.clothes.repository.UserRepository;
-import com.sun.xml.bind.v2.TODO;
-import org.dom4j.rule.Mode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import com.scpi.clothes.repository.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,20 +24,18 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin")
 public class AdminSystemController {
-    UserRepository userRepository;
+    AdminRepository adminRepository;
     ClothesRepository clothesRepository;
     ClothesOrderRepository clothesOrderRepository;
-    SupplierRepository supplierRepository;
 
-    public AdminSystemController(ClothesRepository clothesRepository, ClothesOrderRepository clothesOrderRepository, SupplierRepository supplierRepository, UserRepository userRepository) {
+    public AdminSystemController(ClothesRepository clothesRepository, ClothesOrderRepository clothesOrderRepository, AdminRepository adminRepository) {
         this.clothesRepository = clothesRepository;
         this.clothesOrderRepository = clothesOrderRepository;
-        this.supplierRepository = supplierRepository;
-        this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping
-    public String index(Model model, @AuthenticationPrincipal User user) {
+    public String index(Model model, @AuthenticationPrincipal Admin user) {
         List<Long> sales = new ArrayList<>(4);
         for (int i = 0; i <4; ++i)
             sales.add(0L);
@@ -68,7 +57,7 @@ public class AdminSystemController {
     }
 
     @GetMapping("/{pageType}")
-    public String card(Model model, @PathVariable("pageType") String pageType, @AuthenticationPrincipal User user) {
+    public String card(Model model, @PathVariable("pageType") String pageType, @AuthenticationPrincipal Admin user) {
         List<Long> sales = new ArrayList<>(4);
         for (int i = 0; i <4; ++i)
             sales.add(0L);
@@ -124,7 +113,7 @@ public class AdminSystemController {
     }
 
     @GetMapping("/addCloth")
-    public String addCloth(Model model, @AuthenticationPrincipal User user) {
+    public String addCloth(Model model, @AuthenticationPrincipal Admin user) {
         model.addAttribute("user", user);
         return "dist/addCloth";
     }
@@ -136,7 +125,7 @@ public class AdminSystemController {
     }
 
     @GetMapping("/changeCloth")
-    public String changeCloth(Model model, @AuthenticationPrincipal User user,
+    public String changeCloth(Model model, @AuthenticationPrincipal Admin user,
                               @RequestParam(value = "clothId", required = false) Long clothId,
                               @RequestParam(value = "clothName", required = false) String clothName) {
         Clothes clothes = new Clothes();
@@ -169,7 +158,7 @@ public class AdminSystemController {
     }
 
     @GetMapping("/delete")
-    public String deleteCloth(@RequestParam(value = "clothId") Long clothId, Model model, @AuthenticationPrincipal User user) {
+    public String deleteCloth(@RequestParam(value = "clothId") Long clothId, Model model, @AuthenticationPrincipal Admin user) {
         model.addAttribute("user", user);
         model.addAttribute("clothes", clothesRepository.findById(clothId).get());
         return "dist/deleteCloth";

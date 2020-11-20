@@ -19,8 +19,9 @@ public class Clothes {
     private Long inventory;
     private Long totalSales;
 
-    @ManyToMany(targetEntity = Supplier.class, mappedBy = "clothes", fetch = FetchType.EAGER)
-    private List<Supplier> supplier;
+//    // Is it necessary? may be I don't need this field.
+    @OneToMany(mappedBy = "cloth")
+    private List<AssociationOfClothAndOrder> orders;
 
     private String type;
     private String audienceType;

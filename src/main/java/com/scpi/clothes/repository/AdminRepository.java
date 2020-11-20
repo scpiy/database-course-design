@@ -1,9 +1,10 @@
 package com.scpi.clothes.repository;
 
-import com.scpi.clothes.model.Supplier;
+import com.scpi.clothes.model.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SupplierRepository extends JpaRepository<Supplier, Long> {
+public interface AdminRepository extends JpaRepository<Admin, Long> {
+    Admin findByUsername(String username);
 }

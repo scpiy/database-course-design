@@ -55,14 +55,15 @@
 <div class="container">
     <table class="table">
         <tbody>
-        <tr th:each="item : ${cart.getClothes()}">
+        <tr th:each="order : ${orderList}">
             <td>
                 <img src="" th:src="@{/img/cloth.jpg}" alt="" style="max-width: 15rem">
             </td>
-            <td class="align-middle" th:text="${item.getName()}"></td>
+            <td class="align-middle" th:text="${'Name: ' + order.getClothes().getName()}">Name</td>
             <td class="align-middle">Some description of cloth</td>
 <!--            <td class="align-middle" th:text="${item.getPrice()}">Pieces</td>-->
-            <td class="align-middle" th:text="${item.getPrice()}">Price</td>
+            <td class="align-middle" th:text="${'Price: ' + order.getClothes().getPrice()}">Price</td>
+            <td class="align-middle" th:text="${'Count: ' + order.getCountOfCloth()}">Count</td>
         </tr>
         </tbody>
     </table>

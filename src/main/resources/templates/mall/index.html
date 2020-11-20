@@ -104,7 +104,7 @@
                 <h4 class="card-title">
                   <a th:href="@{/mall/{id}(id = ${cloth.getId()})}" th:text="${cloth.getName()}">Item One</a>
                 </h4>
-                <h5>$24.99</h5>
+                <h5 th:text="${'$' + cloth.getPrice()}">$24.99</h5>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
               </div>
               <div class="card-footer">
